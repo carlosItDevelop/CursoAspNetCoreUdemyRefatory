@@ -1,4 +1,5 @@
-﻿using Cooperchip.ItDeveloper.Domain.Entities;
+﻿using Cooperchip.ItDeveloper.Data.Mappings;
+using Cooperchip.ItDeveloper.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -12,6 +13,16 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        foreach (var property in modelBuilder.Model.GetEntityTypes()
+            .SelectMany(e => e.GetProperties()
+                .Where(p => p.ClrType == typeof(string))))
+        {
+            property.SetColumnType("varchar(90)");
+        }
+
+        modelBuilder.ApplyConfiguration(new EstadoPacienteMap());
+        modelBuilder.ApplyConfiguration(new PacienteMap());
 
         base.OnModelCreating(modelBuilder);
     }
