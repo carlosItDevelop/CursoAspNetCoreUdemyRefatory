@@ -1,12 +1,14 @@
 ﻿using Cooperchip.ItDeveloper.Domain.Emums;
+using Cooperchip.ItDeveloper.Domain.Entities.Base;
 
 namespace Cooperchip.ItDeveloper.Domain.Entities
 {
-    public class Paciente
+    public class Paciente : EntityBase
     {
-        public Paciente() { Ativo = true; }
-
-        public Guid Id { get; set; }
+        public Paciente() 
+        {
+            Ativo = true; 
+        }
 
         public Guid EstadoPacienteId { get; set; }
         public virtual EstadoPaciente? EstadoPaciente { get; set; }
