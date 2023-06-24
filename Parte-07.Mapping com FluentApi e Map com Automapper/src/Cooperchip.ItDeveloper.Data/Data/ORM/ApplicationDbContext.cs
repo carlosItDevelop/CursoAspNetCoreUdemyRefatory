@@ -21,8 +21,15 @@ public class ApplicationDbContext : DbContext
             property.SetColumnType("varchar(90)");
         }
 
-        modelBuilder.ApplyConfiguration(new EstadoPacienteMap());
-        modelBuilder.ApplyConfiguration(new PacienteMap());
+        //modelBuilder.ApplyConfiguration(new EstadoPacienteMap());
+        //modelBuilder.ApplyConfiguration(new PacienteMap());
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+        {
+            relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
+        }
 
         base.OnModelCreating(modelBuilder);
     }
