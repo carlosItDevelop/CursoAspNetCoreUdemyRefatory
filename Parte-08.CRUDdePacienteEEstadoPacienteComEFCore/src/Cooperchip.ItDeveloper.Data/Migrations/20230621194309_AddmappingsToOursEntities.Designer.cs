@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Cooperchip.ItDeveloper.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(ITDeveloperDbContext))]
     [Migration("20230621194309_AddmappingsToOursEntities")]
     partial class AddmappingsToOursEntities
     {

@@ -1,11 +1,9 @@
-﻿using Cooperchip.ItDeveloper.Data.Mappings;
-using Cooperchip.ItDeveloper.Domain.Entities;
+﻿using Cooperchip.ItDeveloper.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 
-public class ApplicationDbContext : DbContext
+public class ITDeveloperDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+    public ITDeveloperDbContext(DbContextOptions<ITDeveloperDbContext> options) 
         : base(options){}
 
     public DbSet<Paciente> Paciente { get; set; }
@@ -24,7 +22,7 @@ public class ApplicationDbContext : DbContext
         //modelBuilder.ApplyConfiguration(new EstadoPacienteMap());
         //modelBuilder.ApplyConfiguration(new PacienteMap());
 
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ITDeveloperDbContext).Assembly);
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

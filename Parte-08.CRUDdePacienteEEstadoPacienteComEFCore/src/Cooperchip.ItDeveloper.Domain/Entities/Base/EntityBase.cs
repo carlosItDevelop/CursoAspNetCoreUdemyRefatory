@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cooperchip.ItDeveloper.Domain.Entities.Base
+﻿namespace Cooperchip.ItDeveloper.Domain.Entities.Base
 {
     public abstract class EntityBase
     {
@@ -14,7 +8,7 @@ namespace Cooperchip.ItDeveloper.Domain.Entities.Base
         }
         public Guid Id { get; set; }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var compareTo = obj as EntityBase;
             if (ReferenceEquals(this, compareTo)) return true;
