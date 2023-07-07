@@ -1,0 +1,36 @@
+﻿@model Cooperchip.ItDeveloper.Domain.Entities.EstadoPaciente
+
+@{
+    ViewData ["Title"] = "Detalhes de Estado do Paciente";
+}
+
+
+<partial name="PartialViews/_cabecalho" />
+
+
+<div class="panel panel-default panel-controls">
+    <div class="panel panel-heading">
+        <h3>Detalhes de Estado Paciente</h3>
+    </div>
+
+    <div class="panel panel-body">
+
+        <div>
+            <h3>EstadoPaciente</h3>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Descricao)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Descricao)
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <a asp-asp-controller="EstadoPaciente" class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
+            <a asp-asp-controller="EstadoPaciente" class="btn btn-default" asp-action="Index">Voltar para a Lista</a>
+        </div>
+
+    </div>
+</div>

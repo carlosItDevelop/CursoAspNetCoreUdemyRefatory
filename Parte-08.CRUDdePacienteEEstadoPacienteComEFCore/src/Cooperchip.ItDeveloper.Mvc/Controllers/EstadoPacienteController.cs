@@ -125,7 +125,7 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
 
             try
             {
-                _context.EstadoPaciente.Remove(estadoPaciente);
+                _context.EstadoPaciente?.Remove(estadoPaciente);
                 await _context.SaveChangesAsync();
 
             } catch (Exception ex)
