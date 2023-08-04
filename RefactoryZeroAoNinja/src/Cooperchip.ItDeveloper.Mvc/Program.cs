@@ -1,3 +1,4 @@
+using Cooperchip.ItDeveloper.Mvc.Extensions.ViewComponents.EstadoPaciente;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cooperchip.ItDeveloper.Mvc
@@ -8,8 +9,12 @@ namespace Cooperchip.ItDeveloper.Mvc
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //builder.Services.AddMvc().AddTagHelpersAsServices();
+            //builder.Services.AddRazorPages().AddTagHelpersAsServices();
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
 
             builder.Services.AddDbContext<ITDeveloperDbContext>(options =>
                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
