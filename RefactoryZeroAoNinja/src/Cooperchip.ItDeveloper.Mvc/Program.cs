@@ -9,9 +9,6 @@ namespace Cooperchip.ItDeveloper.Mvc
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Services.AddMvc().AddTagHelpersAsServices();
-            //builder.Services.AddRazorPages().AddTagHelpersAsServices();
-
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
