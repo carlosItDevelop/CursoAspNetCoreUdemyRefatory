@@ -45,6 +45,8 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
             { 
                 var paciente = new Paciente()
                 {
+                    //Id = Guid.NewGuid(), // Herda de EntityBase
+
                     Ativo = pacienteViewModel.Ativo,
                     Cpf = pacienteViewModel.Cpf,
                     DataInternacao = pacienteViewModel.DataInternacao,
@@ -52,7 +54,6 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
                     Email = pacienteViewModel.Email,
                     EstadoPaciente = pacienteViewModel.EstadoPaciente,
                     EstadoPacienteId = pacienteViewModel.EstadoPacienteId,
-                    Id = pacienteViewModel.Id,
                     Nome = pacienteViewModel.Nome,
                     Rg = pacienteViewModel.Rg,
                     RgDataEmissao = pacienteViewModel.RgDataEmissao,
@@ -74,6 +75,7 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
                     return View(pacienteViewModel);
                 }
             }
+
             ViewBag.EstadoPaciente = new SelectList(await ListaEstadoPaciente(), "Id", "Descricao");
             return View(pacienteViewModel);
         }
