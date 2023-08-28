@@ -42,26 +42,8 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
         public async Task<IActionResult> Create(PacienteViewModel pacienteViewModel)
         {
             if (ModelState.IsValid)
-            { 
-                var paciente = new Paciente()
-                {
-                    //Id = Guid.NewGuid(), // Herda de EntityBase
-
-                    Ativo = pacienteViewModel.Ativo,
-                    Cpf = pacienteViewModel.Cpf,
-                    DataInternacao = pacienteViewModel.DataInternacao,
-                    DataNascimento = pacienteViewModel.DataNascimento,
-                    Email = pacienteViewModel.Email,
-                    EstadoPaciente = pacienteViewModel.EstadoPaciente,
-                    EstadoPacienteId = pacienteViewModel.EstadoPacienteId,
-                    Nome = pacienteViewModel.Nome,
-                    Rg = pacienteViewModel.Rg,
-                    RgDataEmissao = pacienteViewModel.RgDataEmissao,
-                    RgOrgao = pacienteViewModel.RgOrgao,
-                    Sexo = pacienteViewModel.Sexo,
-                    TipoPaciente = pacienteViewModel.TipoPaciente,
-                    Motivo = pacienteViewModel.Motivo
-                };
+            {
+                Paciente paciente = MapperOfTheViewModelToModel(pacienteViewModel);
 
                 try
                 {
@@ -80,6 +62,98 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
             return View(pacienteViewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            Paciente? paciente = await _context.Set<Paciente>()
+                .Include(x => x.EstadoPaciente)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+
+            if(paciente is null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.EstadoPaciente = new SelectList(await ListaEstadoPaciente(), "Id", "Descricao");
+
+            return View(await MapperOfModelToViewModel(paciente));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, PacienteViewModel pacienteVM)
+        {
+            if (id != pacienteVM.Id)
+            {
+                return NotFound();
+            }
+
+            if(ModelState.IsValid)
+            {
+                try
+                {
+                    var paciente = MapperOfTheViewModelToModel(pacienteVM);
+                    _context.Entry(paciente).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+
+                    TempData ["Sucesso"] = "Registro Atualizado com Sucesso!";
+                    return RedirectToAction(nameof(Index));
+
+                } catch (DbUpdateConcurrencyException dbConflitex)
+                {
+                    if (!TemPaciente(pacienteVM.Id))
+                    {
+                        return BadRequest(dbConflitex.Message);
+                    } else
+                    {
+                        throw;
+                    }
+                } catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            ViewBag.EstadoPaciente = new SelectList(await ListaEstadoPaciente(), "Id", "Descricao");
+            return View(pacienteVM);
+
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            Paciente? paciente = await _context.Set<Paciente>()
+                .Include(x => x.EstadoPaciente)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+
+            if (paciente is null)
+            {
+                return NotFound();
+            }
+
+            return View(await MapperOfModelToViewModel(paciente));
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            Paciente? paciente = await _context.Set<Paciente>()
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+
+            if (paciente is null)
+            {
+                TempData ["Error"] = $"Registro com ID: {id}, não foi encontrado!";
+                return NotFound();
+            }
+
+            _context.Entry(paciente).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+            TempData ["Sucesso"] = "Registro Deletado com Sucesso!";
+
+            return Redirect(nameof(Index));
+        }
 
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
@@ -184,6 +258,33 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
                 .Where(x => x.EstadoPaciente.Id == estadoPacienteId)
                 .OrderBy(order => order.Nome)
                 .ToListAsync();
+        }
+        #endregion
+
+
+        #region: Mapper Of The ViewModel To Model
+        private static Paciente MapperOfTheViewModelToModel(PacienteViewModel pacienteViewModel)
+        {
+            var paciente = new Paciente()
+            {
+                //Id = Guid.NewGuid(), // Herda de EntityBase
+
+                Ativo = pacienteViewModel.Ativo,
+                Cpf = pacienteViewModel.Cpf,
+                DataInternacao = pacienteViewModel.DataInternacao,
+                DataNascimento = pacienteViewModel.DataNascimento,
+                Email = pacienteViewModel.Email,
+                EstadoPaciente = pacienteViewModel.EstadoPaciente,
+                EstadoPacienteId = pacienteViewModel.EstadoPacienteId,
+                Nome = pacienteViewModel.Nome,
+                Rg = pacienteViewModel.Rg,
+                RgDataEmissao = pacienteViewModel.RgDataEmissao,
+                RgOrgao = pacienteViewModel.RgOrgao,
+                Sexo = pacienteViewModel.Sexo,
+                TipoPaciente = pacienteViewModel.TipoPaciente,
+                Motivo = pacienteViewModel.Motivo
+            };
+            return paciente;
         }
         #endregion
 
