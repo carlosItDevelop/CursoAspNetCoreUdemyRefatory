@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cooperchip.ItDeveloper.Doma
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.Infra", "4.Infra", "{0741A5BB-7638-49B9-BA44-E28667C87444}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cooperchip.ItDeveloper.Data", "src\Cooperchip.ItDeveloper.Data\Cooperchip.ItDeveloper.Data.csproj", "{DF0E3413-12BB-4D7A-AEED-1B58CCBC3FEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cooperchip.ItDeveloper.Data", "src\Cooperchip.ItDeveloper.Data\Cooperchip.ItDeveloper.Data.csproj", "{DF0E3413-12BB-4D7A-AEED-1B58CCBC3FEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

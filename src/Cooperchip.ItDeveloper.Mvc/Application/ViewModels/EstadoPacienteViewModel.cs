@@ -1,7 +1,7 @@
 ﻿using Cooperchip.ItDeveloper.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
-namespace Cooperchip.ItDeveloper.Mvc.Models
+namespace Cooperchip.ItDeveloper.Mvc.Application.ViewModels
 {
     public class EstadoPacienteViewModel
     {

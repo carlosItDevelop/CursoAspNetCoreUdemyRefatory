@@ -1,0 +1,94 @@
+﻿
+@model IEnumerable<Cooperchip.ItDeveloper.Mvc.Application.ViewModels.PacienteViewModel>
+
+
+@{
+    ViewData ["Title"] = "Gráfico por Estado de Paciente";
+}
+
+<vc:cabecalho 
+    titulo="Medical Management-Sys / Módulo Pacientes" 
+    subtitulo="Módulo de Administração de Pacientes">
+</vc:cabecalho>
+
+<div class="row">
+    <div class="panel panel-heading">
+        <h3>Relatório de Pacientes por Estado-de-Paciente</h3>
+    </div>
+
+    <div class="panel panel-body">
+        <table class="table table-bordered table-hover myTable" id="ccc">
+            <thead class="dark">
+                <tr>
+
+                    <th>@Html.DisplayNameFor(model => model.Nome)
+                    </th>
+                    <th>@Html.DisplayNameFor(model => model.DataNascimento)
+                    </th>
+
+                    <th>@Html.DisplayNameFor(model => model.Ativo)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.TipoPaciente)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Sexo)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.EstadoPaciente.Descricao)
+                    </th>
+
+                    <th>Ação</th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nome)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DataNascimento)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ativo)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TipoPaciente)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Sexo)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EstadoPaciente.Descricao)
+                        </td>
+
+                        <td class="text-right">
+                            <a asp-controller="Paciente" asp-action="Edit" asp-route-id="@item.Id"><span class="fa fa-pencil-square fa-2x" title="Editar Paciente"></span> </a>
+                            <a asp-controller="Paciente" asp-action="Details" asp-route-id="@item.Id"><span class="fa fa-search fa-2x" title="Detalhes Paciente"></span> </a>
+                            <a asp-controller="Paciente" asp-action="Delete" asp-route-id="@item.Id"><span class="fa fa-trash fa-2x" title="Excluir Paciente"></span> </a>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@section Scripts {
+
+    @* Bundle  dataTable *@
+    <script src="/bundle/dataTables.min.js"></script>
+    <script src="~/bundle/dashboard.min.js"></script>
+
+}

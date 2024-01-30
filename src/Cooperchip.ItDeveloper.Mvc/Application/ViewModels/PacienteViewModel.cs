@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Cooperchip.ItDeveloper.Mvc.Models
+namespace Cooperchip.ItDeveloper.Mvc.Application.ViewModels
 {
     public class PacienteViewModel
     {
@@ -89,7 +89,7 @@ namespace Cooperchip.ItDeveloper.Mvc.Models
 
         public override string ToString()
         {
-            return this.Id.ToString() + "  -  " + this.Nome;
+            return Id.ToString() + "  -  " + Nome;
         }
     }
 }

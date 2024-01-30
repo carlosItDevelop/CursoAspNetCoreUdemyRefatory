@@ -1,5 +1,5 @@
 ﻿using Cooperchip.ItDeveloper.Domain.Entities;
-using Cooperchip.ItDeveloper.Mvc.Models;
+using Cooperchip.ItDeveloper.Mvc.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,13 +9,11 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
 
     public class PacienteController : BaseController
     {
-        private readonly ILogger _logger;
         private readonly ITDeveloperDbContext _context;
 
-        public PacienteController(ITDeveloperDbContext context, ILogger logger)
+        public PacienteController(ITDeveloperDbContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
         [HttpGet]
@@ -25,9 +23,16 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObterPacientesPorEstadopaciente(Guid estadoPacienteId)
+        public async Task<IActionResult> ReportForEstadoPaciente(Guid estadoPacienteId)
         {
+
             return View(await MapperListOfModelsToListOfViewModels(await ObterTodosPorEPaciente(estadoPacienteId)));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            return View(await MapperOfModelToViewModel(await ObterPorId(id)));
         }
 
         [HttpGet]
@@ -43,7 +48,7 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                Paciente paciente = MapperOfTheViewModelToModel(pacienteViewModel);
+                Paciente? paciente = await MapperOfTheViewModelToModel(pacienteViewModel);
 
                 try
                 {
@@ -92,25 +97,28 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
             {
                 try
                 {
-                    var paciente = MapperOfTheViewModelToModel(pacienteVM);
+                    var paciente = await MapperOfTheViewModelToModel(pacienteVM);
+                    paciente.Id = pacienteVM.Id;
+
                     _context.Entry(paciente).State = EntityState.Modified;
+                    //_context.Set<Paciente>().Update(paciente);
+
+
                     await _context.SaveChangesAsync();
 
                     TempData ["Sucesso"] = "Registro Atualizado com Sucesso!";
                     return RedirectToAction(nameof(Index));
 
-                } catch (DbUpdateConcurrencyException dbConflitex)
+                } catch (DbUpdateConcurrencyException)
                 {
                     if (!TemPaciente(pacienteVM.Id))
                     {
-                        return BadRequest(dbConflitex.Message);
+                        return NotFound("Paciente não encontrado!");
                     } else
                     {
-                        throw;
+                        TempData ["Error"] = "Conflito ao Atualizar Paciente. Contate o Administrador do Sistema!";
+                        return View(pacienteVM);
                     }
-                } catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
                 }
             }
 
@@ -152,14 +160,9 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
             await _context.SaveChangesAsync();
             TempData ["Sucesso"] = "Registro Deletado com Sucesso!";
 
-            return Redirect(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Details(Guid id)
-        {
-            return View(await MapperOfModelToViewModel(await ObterPorId(id)));
-        }
 
         #region: Mapper de Model para ViewModel
         private async Task<PacienteViewModel> MapperOfModelToViewModel(Paciente? item)
@@ -222,9 +225,11 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
         #region: Retorna uma lista de todos os Pacientes cadastrados
         private async Task<List<Paciente>> ObterTodos()
         {
-            return await _context.Paciente
+            var lista = await _context.Paciente
                 .Include(x => x.EstadoPaciente)
                 .AsNoTracking().ToListAsync();
+
+            return await Task.FromResult(lista);
         }
         #endregion
 
@@ -237,7 +242,7 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
         #endregion
 
         #region: Retorna um Paciente cadastrado, filtrado pelo seu Id
-        private async Task<Paciente> ObterPorId(Guid id)
+        private async Task<Paciente?> ObterPorId(Guid id)
         {
             var paciente = await _context.Paciente
                 .Include(x => x.EstadoPaciente)
@@ -252,18 +257,21 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
         #region: Obtem todos os Paciente, filtrado por um único EstadoPaciente
         private async Task<List<Paciente>> ObterTodosPorEPaciente(Guid estadoPacienteId)
         {
-            return await _context.Paciente
+
+            var lista = await _context.Paciente
                 .Include(ep => ep.EstadoPaciente)
                 .AsNoTracking()
                 .Where(x => x.EstadoPaciente.Id == estadoPacienteId)
                 .OrderBy(order => order.Nome)
                 .ToListAsync();
+
+            return await Task.FromResult(lista);
         }
         #endregion
 
 
         #region: Mapper Of The ViewModel To Model
-        private static Paciente MapperOfTheViewModelToModel(PacienteViewModel pacienteViewModel)
+        private async Task<Paciente> MapperOfTheViewModelToModel(PacienteViewModel pacienteViewModel)
         {
             var paciente = new Paciente()
             {
@@ -284,9 +292,10 @@ namespace Cooperchip.ItDeveloper.Mvc.Controllers
                 TipoPaciente = pacienteViewModel.TipoPaciente,
                 Motivo = pacienteViewModel.Motivo
             };
-            return paciente;
+            return await Task.FromResult(paciente);
         }
         #endregion
+
 
         #region: Retorna um booleano indicando se tem paciente Paciente
 
